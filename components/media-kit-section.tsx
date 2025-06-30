@@ -2,58 +2,68 @@
 
 import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
-import { ExternalLink, Instagram, Youtube, Briefcase } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Instagram, Youtube, Music, Camera, Briefcase, Globe } from "lucide-react"
 
 const mediaLinks = [
   {
-    title: "Perfil Instagram",
-    description: "Acompanhe meu conteúdo diário de moda e lifestyle",
+    title: "Instagram",
+    handle: "@douglasmyth",
+    followers: "100K+",
+    description: "Conteúdo diário de moda e lifestyle",
     icon: Instagram,
     href: "#",
-    color: "from-pink-500 to-purple-600",
-    textColor: "text-pink-600 dark:text-pink-400",
+    gradient: "from-pink-500 via-purple-500 to-indigo-500",
+    stats: "Engajamento: 8.5%",
+  },
+  {
+    title: "YouTube",
+    handle: "Douglas Myth",
+    followers: "50K+",
+    description: "Tutoriais de cuidados capilares e lifestyle",
+    icon: Youtube,
+    href: "#",
+    gradient: "from-red-500 via-pink-500 to-orange-500",
+    stats: "Visualizações: 2M+",
+  },
+  {
+    title: "TikTok",
+    handle: "@douglasmyth",
+    followers: "200K+",
+    description: "Conteúdo viral de moda e entretenimento",
+    icon: Music,
+    href: "#",
+    gradient: "from-purple-500 via-pink-500 to-red-500",
+    stats: "Likes: 5M+",
   },
   {
     title: "Move Model",
-    description: "Portfólio profissional de modelagem",
+    handle: "Portfólio Profissional",
+    followers: "Elite",
+    description: "Trabalhos profissionais de modelagem",
+    icon: Camera,
+    href: "#",
+    gradient: "from-gray-600 via-gray-500 to-black",
+    stats: "Campanhas: 50+",
+  },
+  {
+    title: "Colaborações",
+    handle: "Parcerias Premium",
+    followers: "Brands",
+    description: "Trabalhos com marcas internacionais",
     icon: Briefcase,
     href: "#",
-    color: "from-blue-500 to-cyan-600",
-    textColor: "text-blue-600 dark:text-blue-400",
+    gradient: "from-emerald-500 via-teal-500 to-cyan-500",
+    stats: "Marcas: 25+",
   },
   {
-    title: "YouTube Cuidados Capilares",
-    description: "Dicas e tutoriais de cuidados com o cabelo",
-    icon: Youtube,
+    title: "Internacional",
+    handle: "Presença Global",
+    followers: "Worldwide",
+    description: "Reconhecimento internacional",
+    icon: Globe,
     href: "#",
-    color: "from-red-500 to-pink-600",
-    textColor: "text-red-600 dark:text-red-400",
-  },
-  {
-    title: "Promoção Gocase",
-    description: "Colaboração com acessórios tech",
-    icon: ExternalLink,
-    href: "#",
-    color: "from-green-500 to-teal-600",
-    textColor: "text-green-600 dark:text-green-400",
-  },
-  {
-    title: "Colaboração Joy Bag",
-    description: "Parceria com acessórios de moda",
-    icon: ExternalLink,
-    href: "#",
-    color: "from-purple-500 to-indigo-600",
-    textColor: "text-purple-600 dark:text-purple-400",
-  },
-  {
-    title: "Promoção Beetools English",
-    description: "Plataforma de aprendizado de idiomas",
-    icon: ExternalLink,
-    href: "#",
-    color: "from-orange-500 to-red-600",
-    textColor: "text-orange-600 dark:text-orange-400",
+    gradient: "from-blue-500 via-indigo-500 to-purple-500",
+    stats: "Países: 15+",
   },
 ]
 
@@ -64,8 +74,13 @@ export default function MediaKitSection() {
   })
 
   return (
-    <section id="media-kit" className="py-20 lg:py-32 bg-gray-50 dark:bg-gray-900/50">
-      <div className="container mx-auto px-4">
+    <section id="media-kit" className="py-20 lg:py-32 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-purple-900/10 dark:via-pink-900/10 dark:to-indigo-900/10" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl" />
+
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -73,46 +88,118 @@ export default function MediaKitSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl font-serif font-bold mb-6 dark:text-white">Kit de Mídia</h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Explore minhas colaborações profissionais e conteúdo em várias plataformas
-          </p>
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-4xl lg:text-6xl font-serif font-bold mb-6 dark:text-white bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent"
+          >
+            Presença Digital
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto"
+          >
+            Conectando com audiências globais através de múltiplas plataformas
+          </motion.p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mediaLinks.map((link, index) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {mediaLinks.map((platform, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+              className="group"
             >
-              <Card className="group hover:shadow-2xl transition-all duration-300 border-0 bg-white dark:bg-gray-800 overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${link.color} text-white`}>
-                      <link.icon size={24} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className={`font-semibold text-lg mb-2 ${link.textColor}`}>{link.title}</h3>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{link.description}</p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="group-hover:bg-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300 bg-transparent"
-                        asChild
-                      >
-                        <a href={link.href} target="_blank" rel="noopener noreferrer">
-                          Visitar <ExternalLink size={14} className="ml-2" />
-                        </a>
-                      </Button>
-                    </div>
+              <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-gray-900 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                {/* Gradient Background */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${platform.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+                />
+
+                {/* Content */}
+                <div className="relative p-8">
+                  {/* Icon */}
+                  <div
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${platform.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <platform.icon size={28} className="text-white" />
                   </div>
-                </CardContent>
-              </Card>
+
+                  {/* Platform Info */}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-2xl font-bold dark:text-white mb-1">{platform.title}</h3>
+                      <p className="text-gray-500 dark:text-gray-400 text-sm">{platform.handle}</p>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                          {platform.followers}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                          Seguidores
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">{platform.stats}</div>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{platform.description}</p>
+
+                    {/* Action Button */}
+                    <motion.a
+                      href={platform.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center justify-center w-full py-3 px-6 rounded-xl bg-gradient-to-r ${platform.gradient} text-white font-semibold text-sm hover:shadow-lg transition-all duration-300 transform hover:scale-105`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Visitar Perfil
+                    </motion.a>
+                  </div>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-white/10 to-transparent rounded-full blur-xl" />
+                <div className="absolute bottom-4 left-4 w-16 h-16 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-lg" />
+              </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Bottom Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="mt-20 text-center"
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            {[
+              { number: "350K+", label: "Total de Seguidores" },
+              { number: "7M+", label: "Impressões Mensais" },
+              { number: "8.5%", label: "Taxa de Engajamento" },
+              { number: "25+", label: "Marcas Parceiras" },
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   )

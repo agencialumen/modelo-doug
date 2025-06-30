@@ -9,8 +9,7 @@ import { useTheme } from "next-themes"
 const navItems = [
   { name: "Início", href: "#home" },
   { name: "Sobre", href: "#about" },
-  { name: "Kit de Mídia", href: "#media-kit" },
-  { name: "Projetos", href: "#projects" },
+  { name: "Mídia", href: "#media-kit" },
   { name: "Galeria", href: "#gallery" },
   { name: "Apoiar", href: "#support" },
 ]
