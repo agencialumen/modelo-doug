@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 
 const heroImages = [
   "https://iili.io/F7C0CN9.md.jpg",
+  "https://iili.io/F7CyAZv.md.jpg",
   "https://iili.io/F7CrbJ2.md.jpg",
-  "/placeholder.svg?height=1080&width=1920",
 ]
 
 export default function HeroSection() {
