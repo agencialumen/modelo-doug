@@ -23,9 +23,9 @@ export default function HeroSection() {
   }, [])
 
   const socialLinks = [
-    { icon: Instagram, href: "#", label: "Instagram", color: "hover:text-pink-500" },
-    { icon: Youtube, href: "#", label: "YouTube", color: "hover:text-red-500" },
-    { icon: Music, href: "#", label: "TikTok", color: "hover:text-purple-500" },
+    { icon: Instagram, href: "https://www.instagram.com/dougm_", label: "Instagram", color: "hover:text-pink-500" },
+    { icon: Youtube, href: "https://www.youtube.com/watch?v=uavy66h3p9o&feature=youtu.be", label: "YouTube", color: "hover:text-red-500" },
+    { icon: Music, href: "http://goca.se/myth", label: "Gocase", color: "hover:text-purple-500" },
     { icon: Mail, href: "#", label: "Email", color: "hover:text-blue-500" },
   ]
 
