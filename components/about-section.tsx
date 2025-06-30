@@ -23,7 +23,7 @@ export default function AboutSection() {
           >
             <div className="relative overflow-hidden rounded-2xl">
               <img
-                src="https://iili.io/F7nTNfI.md.jpg"
+                src="/placeholder.svg?height=600&width=500"
                 alt="Douglas Myth Portrait"
                 className="w-full h-[600px] object-cover"
               />
@@ -94,9 +94,7 @@ export default function AboutSection() {
                 { number: "5+", label: "Anos de Experiência" },
               ].map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-2xl lg:text-3xl font-bold text-purple-600 dark:text-purple-400">
-                    {stat.number}
-                  </div>
+                  <div className="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-200">{stat.number}</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{stat.label}</div>
                 </div>
               ))}

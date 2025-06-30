@@ -1,78 +1,68 @@
 "use client"
 
 import type React from "react"
-import type { HTMLTimeout } from "some-module" // Declare or import HTMLTimeout here
 
 import { useState, useRef, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useInView } from "react-intersection-observer"
-import { Play, Pause, ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Heart, Play, Pause, Grid3X3, Maximize2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useSwipe } from "@/hooks/use-swipe"
 import { useDoubleTap } from "@/hooks/use-double-tap"
 import HeartAnimation from "@/components/heart-animation"
-import LikeCounter from "@/components/like-counter"
 
 const storyItems = [
   {
     id: 1,
-    image: "/placeholder.svg?height=600&width=400",
-    title: "Bastidores",
-    description: "Momentos exclusivos dos bastidores do meu último ensaio fotográfico",
+    image: "/placeholder.svg?height=800&width=450",
+    title: "Editorial Fashion",
+    location: "Milano, Italy",
     likes: 0,
+    category: "Editorial",
   },
   {
     id: 2,
-    image: "/placeholder.svg?height=600&width=400",
-    title: "Fashion Week",
-    description: "Destaques da Semana de Moda de Paris 2024",
+    image: "/placeholder.svg?height=800&width=450",
+    title: "Behind the Scenes",
+    location: "Paris, France",
     likes: 0,
+    category: "Backstage",
   },
   {
     id: 3,
-    image: "/placeholder.svg?height=600&width=400",
-    title: "Sessão de Estúdio",
-    description: "Processo criativo no meu estúdio de fotografia favorito",
+    image: "/placeholder.svg?height=800&width=450",
+    title: "Studio Session",
+    location: "New York, USA",
     likes: 0,
+    category: "Studio",
   },
   {
     id: 4,
-    image: "/placeholder.svg?height=600&width=400",
-    title: "Colaboração de Marca",
-    description: "Trabalhando com marcas premium de moda",
+    image: "/placeholder.svg?height=800&width=450",
+    title: "Street Style",
+    location: "London, UK",
     likes: 0,
+    category: "Street",
   },
   {
     id: 5,
-    image: "/placeholder.svg?height=600&width=400",
-    title: "Diário de Viagem",
-    description: "Aventuras ao redor do mundo",
+    image: "/placeholder.svg?height=800&width=450",
+    title: "Campaign Shoot",
+    location: "Tokyo, Japan",
     likes: 0,
+    category: "Campaign",
   },
   {
     id: 6,
-    image: "/placeholder.svg?height=600&width=400",
-    title: "Momentos Lifestyle",
-    description: "Momentos espontâneos do meu dia a dia",
+    image: "/placeholder.svg?height=800&width=450",
+    title: "Runway Backstage",
+    location: "São Paulo, Brazil",
     likes: 0,
-  },
-  {
-    id: 7,
-    image: "/placeholder.svg?height=600&width=400",
-    title: "Ensaio Editorial",
-    description: "Fotografia editorial de alta moda",
-    likes: 0,
-  },
-  {
-    id: 8,
-    image: "/placeholder.svg?height=600&width=400",
-    title: "Street Style",
-    description: "Moda urbana e fotografia de rua",
-    likes: 0,
+    category: "Runway",
   },
 ]
 
-interface Heart {
+interface StoryHeart {
   id: string
   x: number
   y: number
@@ -80,37 +70,20 @@ interface Heart {
 
 export default function GallerySection() {
   const [currentStory, setCurrentStory] = useState(0)
-  const [isStoryPlaying, setIsStoryPlaying] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [storyLikes, setStoryLikes] = useState<number[]>(storyItems.map((item) => item.likes))
-  const [hearts, setHearts] = useState<Heart[]>([])
+  const [hearts, setHearts] = useState<StoryHeart[]>([])
   const [isLiked, setIsLiked] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [viewMode, setViewMode] = useState<"story" | "grid">("story")
+  const [selectedGridImage, setSelectedGridImage] = useState<number | null>(null)
 
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.2,
   })
 
-  const storyIntervalRef = useRef<HTMLTimeout | null>(null)
   const storyContainerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (isStoryPlaying && !isTransitioning) {
-      storyIntervalRef.current = setInterval(() => {
-        nextStory()
-      }, 4000)
-    } else {
-      if (storyIntervalRef.current) {
-        clearInterval(storyIntervalRef.current)
-      }
-    }
-
-    return () => {
-      if (storyIntervalRef.current) {
-        clearInterval(storyIntervalRef.current)
-      }
-    }
-  }, [isStoryPlaying, isTransitioning])
 
   const nextStory = () => {
     if (isTransitioning) return
@@ -133,6 +106,7 @@ export default function GallerySection() {
     setIsTransitioning(true)
     setCurrentStory(index)
     setIsLiked(false)
+    setViewMode("story")
     setTimeout(() => setIsTransitioning(false), 500)
   }
 
@@ -143,25 +117,19 @@ export default function GallerySection() {
     const x = ("touches" in event ? event.changedTouches[0].clientX : event.clientX) - rect.left
     const y = ("touches" in event ? event.changedTouches[0].clientY : event.clientY) - rect.top
 
-    // Add heart animation
-    const newHeart: Heart = {
+    const newHeart: StoryHeart = {
       id: Date.now().toString() + Math.random(),
       x,
       y,
     }
 
     setHearts((prev) => [...prev, newHeart])
-
-    // Increment like count
     setStoryLikes((prev) => {
       const newLikes = [...prev]
       newLikes[currentStory] += 1
       return newLikes
     })
-
     setIsLiked(true)
-
-    // Reset liked state after animation
     setTimeout(() => setIsLiked(false), 1000)
   }
 
@@ -169,20 +137,30 @@ export default function GallerySection() {
     setHearts((prev) => prev.filter((heart) => heart.id !== heartId))
   }
 
-  // Swipe handlers
   const swipeHandlers = useSwipe({
     onSwipedLeft: nextStory,
     onSwipedRight: prevStory,
     onDoubleTap: handleDoubleTap,
   })
 
-  // Double-tap handler for desktop
   const doubleTapHandler = useDoubleTap({
     onDoubleTap: handleDoubleTap,
   })
 
+  // Auto-advance stories
+  useEffect(() => {
+    if (!isPlaying || viewMode === "grid") return
+
+    const interval = setInterval(() => {
+      if (!isTransitioning) {
+        nextStory()
+      }
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [isTransitioning, isPlaying, viewMode])
+
   return (
-    <section id="gallery" className="py-20 lg:py-32 bg-gray-50 dark:bg-gray-900/50">
+    <section id="gallery" className="py-20 lg:py-32 bg-gray-50 dark:bg-gray-950">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -191,38 +169,77 @@ export default function GallerySection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl lg:text-5xl font-serif font-bold mb-6 dark:text-white">Galeria Stories</h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Explore minha jornada visual através de fotos exclusivas e momentos dos bastidores
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 md:hidden">
-            👆 Deslize para esquerda/direita para navegar • Toque duplo para curtir ❤️
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 hidden md:block">
-            Clique duplo para curtir ❤️ • Use as setas ou clique para navegar
-          </p>
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-4xl lg:text-6xl font-serif font-bold mb-6 dark:text-white tracking-tight"
+          >
+            GALERIA
+          </motion.h2>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mb-8"
+          >
+            <div className="w-24 h-0.5 bg-black dark:bg-white mx-auto mb-6" />
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto tracking-wide">
+              MOMENTOS EXCLUSIVOS • BASTIDORES • EDITORIAL
+            </p>
+          </motion.div>
+
+          {/* View Mode Toggle */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex justify-center space-x-4 mb-8"
+          >
+            <Button
+              variant={viewMode === "story" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("story")}
+              className={`rounded-full px-6 ${
+                viewMode === "story"
+                  ? "bg-black text-white dark:bg-white dark:text-black"
+                  : "border-gray-300 dark:border-gray-600 bg-transparent"
+              }`}
+            >
+              <Maximize2 size={16} className="mr-2" />
+              STORIES
+            </Button>
+            <Button
+              variant={viewMode === "grid" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("grid")}
+              className={`rounded-full px-6 ${
+                viewMode === "grid"
+                  ? "bg-black text-white dark:bg-white dark:text-black"
+                  : "border-gray-300 dark:border-gray-600 bg-transparent"
+              }`}
+            >
+              <Grid3X3 size={16} className="mr-2" />
+              GRID
+            </Button>
+          </motion.div>
         </motion.div>
 
-        <div className="max-w-4xl mx-auto">
-          {/* Main Story Display */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative mb-8"
-          >
+        {/* Story Mode */}
+        {viewMode === "story" && (
+          <div className="max-w-md mx-auto">
             {/* Story Progress Bars */}
-            <div className="flex space-x-1 mb-6">
+            <div className="flex space-x-1 mb-8">
               {storyItems.map((_, index) => (
                 <div key={index} className="flex-1 h-1 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                    className="h-full bg-black dark:bg-white"
                     initial={{ width: "0%" }}
                     animate={{
                       width: index === currentStory ? "100%" : index < currentStory ? "100%" : "0%",
                     }}
                     transition={{
-                      duration: index === currentStory && isStoryPlaying && !isTransitioning ? 4 : 0.3,
+                      duration: index === currentStory && isPlaying && !isTransitioning ? 4 : 0.3,
                       ease: "linear",
                     }}
                   />
@@ -232,178 +249,202 @@ export default function GallerySection() {
 
             {/* Story Controls */}
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-semibold dark:text-white">{storyItems[currentStory].title}</h3>
               <div className="flex items-center space-x-2">
                 <Button
                   variant="ghost"
                   size="sm"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                </Button>
+                <span className="text-sm text-gray-500 dark:text-gray-400 tracking-widest uppercase">
+                  {isPlaying ? "PAUSAR" : "REPRODUZIR"}
+                </span>
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 tracking-widest uppercase">
+                {String(currentStory + 1).padStart(2, "0")} / {String(storyItems.length).padStart(2, "0")}
+              </div>
+            </div>
+
+            {/* Story Container */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="relative"
+            >
+              <div
+                ref={storyContainerRef}
+                className="relative bg-black rounded-3xl overflow-hidden aspect-[9/16] shadow-2xl select-none cursor-pointer"
+                {...swipeHandlers}
+                onClick={doubleTapHandler}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentStory}
+                    src={storyItems[currentStory].image || "/placeholder.svg"}
+                    alt={storyItems[currentStory].title}
+                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.5 }}
+                    draggable={false}
+                  />
+                </AnimatePresence>
+
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+
+                {/* Heart Animations */}
+                <HeartAnimation hearts={hearts} onHeartComplete={handleHeartComplete} />
+
+                {/* Story Info */}
+                <div className="absolute bottom-8 left-6 right-6 text-white">
+                  <motion.div
+                    key={`info-${currentStory}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                  >
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span className="text-xs bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full uppercase tracking-widest">
+                        {storyItems[currentStory].category}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-serif font-bold mb-2 tracking-wide">
+                      {storyItems[currentStory].title}
+                    </h3>
+                    <p className="text-sm text-white/80 uppercase tracking-widest">
+                      {storyItems[currentStory].location}
+                    </p>
+                  </motion.div>
+                </div>
+
+                {/* Like Counter */}
+                <div className="absolute top-6 right-6">
+                  <motion.div
+                    className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-full px-3 py-2"
+                    initial={{ scale: 1 }}
+                    animate={{ scale: isLiked ? [1, 1.2, 1] : 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Heart
+                      size={16}
+                      className={`transition-colors duration-300 ${isLiked ? "text-red-500 fill-red-500" : "text-white"}`}
+                    />
+                    {storyLikes[currentStory] > 0 && (
+                      <span className="text-white text-sm font-medium">{storyLikes[currentStory]}</span>
+                    )}
+                  </motion.div>
+                </div>
+
+                {/* Navigation Arrows - Desktop */}
+                <div className="absolute inset-y-0 left-0 right-0 hidden md:flex">
+                  <button
+                    onClick={prevStory}
+                    disabled={isTransitioning}
+                    className="flex-1 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-start pl-4"
+                    aria-label="Previous story"
+                  >
+                    <div className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <ChevronLeft size={20} className="text-white" />
+                    </div>
+                  </button>
+                  <button
+                    onClick={nextStory}
+                    disabled={isTransitioning}
+                    className="flex-1 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-end pr-4"
+                    aria-label="Next story"
+                  >
+                    <div className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <ChevronRight size={20} className="text-white" />
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Mobile Navigation */}
+              <div className="flex justify-center space-x-4 mt-6 md:hidden">
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={prevStory}
                   disabled={isTransitioning}
-                  className="text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/20 disabled:opacity-50"
+                  className="rounded-full border-gray-300 dark:border-gray-600 bg-transparent"
                 >
                   <ChevronLeft size={16} />
                 </Button>
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsStoryPlaying(!isStoryPlaying)}
-                  className="text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/20"
-                >
-                  {isStoryPlaying ? <Pause size={16} /> : <Play size={16} />}
-                  <span className="ml-2 hidden sm:inline">{isStoryPlaying ? "Pausar" : "Reproduzir"}</span>
-                </Button>
-                <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={nextStory}
                   disabled={isTransitioning}
-                  className="text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/20 disabled:opacity-50"
+                  className="rounded-full border-gray-300 dark:border-gray-600 bg-transparent"
                 >
                   <ChevronRight size={16} />
                 </Button>
               </div>
-            </div>
+            </motion.div>
+          </div>
+        )}
 
-            {/* Current Story Image */}
-            <div
-              ref={storyContainerRef}
-              className="relative bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl overflow-hidden aspect-[4/5] max-w-md mx-auto shadow-2xl select-none touch-pan-y cursor-pointer"
-              {...swipeHandlers}
-              onClick={doubleTapHandler}
-            >
-              <motion.img
-                key={currentStory}
-                src={storyItems[currentStory].image || "/placeholder.svg"}
-                alt={storyItems[currentStory].title}
-                className="w-full h-full object-cover"
-                initial={{ opacity: 0, scale: 1.1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                draggable={false}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-              {/* Heart Animations */}
-              <HeartAnimation hearts={hearts} onHeartComplete={handleHeartComplete} />
-
-              {/* Like Counter */}
-              <div className="absolute top-4 right-4">
-                <LikeCounter count={storyLikes[currentStory]} isLiked={isLiked} />
-              </div>
-
-              {/* Swipe Indicators - Mobile Only */}
-              <div className="absolute inset-y-0 left-0 w-1/3 flex items-center justify-start pl-4 md:hidden pointer-events-none">
-                <motion.div
-                  className="w-8 h-8 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center"
-                  initial={{ opacity: 0.3 }}
-                  animate={{ opacity: [0.3, 0.6, 0.3] }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-                >
-                  <ChevronLeft size={16} className="text-white" />
-                </motion.div>
-              </div>
-              <div className="absolute inset-y-0 right-0 w-1/3 flex items-center justify-end pr-4 md:hidden pointer-events-none">
-                <motion.div
-                  className="w-8 h-8 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center"
-                  initial={{ opacity: 0.3 }}
-                  animate={{ opacity: [0.3, 0.6, 0.3] }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: 1 }}
-                >
-                  <ChevronRight size={16} className="text-white" />
-                </motion.div>
-              </div>
-
-              {/* Story Info Overlay */}
-              <div className="absolute bottom-6 left-6 right-6 text-white pointer-events-none">
-                <motion.h4
-                  key={`title-${currentStory}`}
-                  className="text-xl font-semibold mb-2"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                >
-                  {storyItems[currentStory].title}
-                </motion.h4>
-                <motion.p
-                  key={`desc-${currentStory}`}
-                  className="text-sm text-white/90"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                >
-                  {storyItems[currentStory].description}
-                </motion.p>
-              </div>
-
-              {/* Desktop Navigation Overlay */}
-              <div className="absolute inset-0 hidden md:flex">
-                <button
-                  onClick={prevStory}
-                  disabled={isTransitioning}
-                  className="flex-1 opacity-0 hover:opacity-100 transition-opacity duration-300 disabled:cursor-not-allowed"
-                  aria-label="Previous story"
-                />
-                <button
-                  onClick={nextStory}
-                  disabled={isTransitioning}
-                  className="flex-1 opacity-0 hover:opacity-100 transition-opacity duration-300 disabled:cursor-not-allowed"
-                  aria-label="Next story"
-                />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Story Thumbnails Grid */}
+        {/* Grid Mode */}
+        {viewMode === "grid" && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-4 md:grid-cols-8 gap-3 max-w-2xl mx-auto"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="max-w-6xl mx-auto"
           >
-            {storyItems.map((story, index) => (
-              <button
-                key={story.id}
-                onClick={() => goToStory(index)}
-                disabled={isTransitioning}
-                className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all duration-300 hover:scale-105 disabled:cursor-not-allowed disabled:hover:scale-100 ${
-                  index === currentStory
-                    ? "border-purple-500 shadow-lg shadow-purple-500/25"
-                    : "border-gray-300 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-400"
-                }`}
-              >
-                <img
-                  src={story.image || "/placeholder.svg"}
-                  alt={story.title}
-                  className="w-full h-full object-cover"
-                  draggable={false}
-                />
-                {index === currentStory && (
-                  <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center">
-                    <div className="w-3 h-3 bg-white rounded-full shadow-lg" />
-                  </div>
-                )}
-                {/* Like indicator on thumbnail */}
-                {storyLikes[index] > 0 && (
-                  <div className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {storyLikes[index]}
-                  </div>
-                )}
-              </button>
-            ))}
-          </motion.div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {storyItems.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="group cursor-pointer"
+                  onClick={() => goToStory(index)}
+                >
+                  <div className="relative aspect-[4/5] bg-black rounded-lg overflow-hidden">
+                    <img
+                      src={item.image || "/placeholder.svg"}
+                      alt={item.title}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-          {/* Story Counter */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center mt-8"
-          >
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              {currentStory + 1} de {storyItems.length} stories
-            </p>
+                    {/* Overlay Info */}
+                    <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="text-xs bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full uppercase tracking-widest mb-2 inline-block">
+                        {item.category}
+                      </div>
+                      <h4 className="font-serif font-bold text-sm mb-1">{item.title}</h4>
+                      <p className="text-xs text-white/80 uppercase tracking-wide">{item.location}</p>
+                    </div>
+
+                    {/* Like indicator */}
+                    {storyLikes[index] > 0 && (
+                      <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1 flex items-center space-x-1">
+                        <Heart size={12} className="text-red-500 fill-red-500" />
+                        <span className="text-white text-xs">{storyLikes[index]}</span>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Grid Footer */}
+            <div className="text-center mt-12">
+              <p className="text-sm text-gray-500 dark:text-gray-400 tracking-widest uppercase">
+                {storyItems.length} IMAGENS • CLIQUE PARA VER EM STORY
+              </p>
+            </div>
           </motion.div>
-        </div>
+        )}
       </div>
     </section>
   )

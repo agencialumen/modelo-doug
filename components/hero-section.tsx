@@ -6,14 +6,13 @@ import { Instagram, Youtube, Music, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const heroImages = [
-  "https://iili.io/F7C0CN9.md.jpg",
-  "https://iili.io/F7CyAZv.md.jpg",
-  "https://iili.io/F7CrbJ2.md.jpg",
+  "/placeholder.svg?height=1080&width=1920",
+  "/placeholder.svg?height=1080&width=1920",
+  "/placeholder.svg?height=1080&width=1920",
 ]
 
 export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState(0)
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,15 +22,15 @@ export default function HeroSection() {
   }, [])
 
   const socialLinks = [
-    { icon: Instagram, href: "https://www.instagram.com/dougm_", label: "Instagram", color: "hover:text-pink-500" },
-    { icon: Youtube, href: "https://www.youtube.com/watch?v=uavy66h3p9o&feature=youtu.be", label: "YouTube", color: "hover:text-red-500" },
-    { icon: Music, href: "http://goca.se/myth", label: "Gocase", color: "hover:text-purple-500" },
-    { icon: Mail, href: "#", label: "Email", color: "hover:text-blue-500" },
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Youtube, href: "#", label: "YouTube" },
+    { icon: Music, href: "#", label: "TikTok" },
+    { icon: Mail, href: "#", label: "Email" },
   ]
 
   return (
     <section id="home" className="relative h-screen overflow-hidden">
-      {/* Background Images/Video */}
+      {/* Background Images */}
       <div className="absolute inset-0">
         <AnimatePresence mode="wait">
           <motion.div
@@ -43,14 +42,14 @@ export default function HeroSection() {
             className="absolute inset-0"
           >
             <div
-              className="w-full h-full bg-cover bg-center bg-no-repeat"
+              className="w-full h-full bg-cover bg-center bg-no-repeat grayscale"
               style={{ backgroundImage: `url(${heroImages[currentImage]})` }}
             />
           </motion.div>
         </AnimatePresence>
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70" />
       </div>
 
       {/* Content */}
@@ -60,20 +59,23 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-6xl md:text-8xl lg:text-9xl font-serif font-bold mb-4 text-white"
+            className="text-6xl md:text-8xl lg:text-9xl font-serif font-bold mb-4 text-white tracking-tight"
             style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}
           >
             Douglas Myth
           </motion.h1>
 
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8 }}
-            className="text-xl md:text-2xl lg:text-3xl font-light mb-8 text-white/90"
+            className="mb-8"
           >
-            Modelo | Entretenimento | Lifestyle | Moda
-          </motion.p>
+            <div className="w-24 h-0.5 bg-white mx-auto mb-6" />
+            <p className="text-xl md:text-2xl lg:text-3xl font-light text-white/90 tracking-wide">
+              MODELO • ENTRETENIMENTO • LIFESTYLE
+            </p>
+          </motion.div>
 
           {/* Social Icons */}
           <motion.div
@@ -88,7 +90,7 @@ export default function HeroSection() {
                 href={social.href}
                 whileHover={{ scale: 1.2, y: -5 }}
                 whileTap={{ scale: 0.9 }}
-                className={`p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white transition-colors duration-300 ${social.color}`}
+                className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white transition-all duration-300 hover:bg-white/20"
               >
                 <social.icon size={24} />
               </motion.a>
@@ -103,10 +105,10 @@ export default function HeroSection() {
           >
             <Button
               size="lg"
-              className="bg-white text-black hover:bg-white/90 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 hover:shadow-2xl"
+              className="bg-white text-black hover:bg-gray-100 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 hover:shadow-2xl border-2 border-transparent hover:border-gray-300"
               onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
             >
-              Descubra Meu Mundo
+              DESCUBRA MEU MUNDO
             </Button>
           </motion.div>
         </div>
