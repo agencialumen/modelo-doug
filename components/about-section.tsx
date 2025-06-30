@@ -23,7 +23,7 @@ export default function AboutSection() {
           >
             <div className="relative overflow-hidden rounded-2xl">
               <img
-                src="/placeholder.svg?height=600&width=500"
+                src="https://iili.io/F7C0CN9.md.jpg"
                 alt="Douglas Myth Portrait"
                 className="w-full h-[600px] object-cover"
               />
